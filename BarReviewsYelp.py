@@ -7,9 +7,6 @@ counts = open(file,"w+")
 os.chdir("C:/Users/Rebecca/Desktop/oda/BI Class")
 files=listdir("C:/Users/Rebecca/Desktop/oda/BI Class")
 for file in files:
-    print(file)
-    with open("C:/Users/Rebecca/Desktop/oda/Bar/counts",'a') as counts:
-                counts.write("\n\n"+str(file)+"\n")
     bar = open(file,'r')
     date = "1/1/2011"
     pricey=0
@@ -17,8 +14,8 @@ for file in files:
     for bline in bar: 
         if "datePublished" in bline:
             with open("C:/Users/Rebecca/Desktop/oda/Bar/counts",'a') as counts:
-                counts.write("\n"+str(date.rstrip())+"\t "+str(pricey)+"\t "+str(expensive))
-            print(str(date.rstrip())+"\t pricey:"+str(pricey)+"\t expensive:"+str(expensive))
+                counts.write("\n"+str(file)+"\t"+str(date.rstrip())+"\t "+str(pricey)+"\t "+str(expensive))
+            print(str(file)+"\t"+str(date.rstrip())+"\t pricey:"+str(pricey)+"\t expensive:"+str(expensive))
             pricey=0
             expensive=0
             bline=bar.readline()
