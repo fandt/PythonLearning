@@ -27,6 +27,7 @@ def test_sums():
           deductSS = drow[6]
         except:
           pass
+        #2 semi-monthly deductions = 1 monthly invoice, adding both deductions (if exist) to match against invoice
         if marker%2 == 0 :
           with open("C:filethatwascreated", 'a') as krecon:
             krecon.write(str(invoicetotal)+"\t"+InvoiceType+"\n")
@@ -63,7 +64,7 @@ def test_sums():
     marker = marker + 1
 
 
-#BACK
+#BACK - looking from invoice to deductions 
   with open("C:filethatwascreated", 'a') as krecon:
       krecon.write("\nNOT FOUND IN DEDUCTIONS")
       SumInvoice = 0
