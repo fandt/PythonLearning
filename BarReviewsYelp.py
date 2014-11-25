@@ -2,12 +2,12 @@ import os
 from os import listdir
 from os.path import isfile, join
 import re
-file = "C:/Users/Rebecca/Desktop/oda/Bar/counts"
+file = "C:/Users/Rebecca/Desktop/Bar/counts"
 counts = open(file,"w+")
-os.chdir("C:/Users/Rebecca/Desktop/oda/BI Class")
+os.chdir("C:/Users/Rebecca/Desktop/BI Class")
 #this folder contains text files of downloaded source code 
-files=listdir("C:/Users/Rebecca/Desktop/oda/BI Class")
-with open("C:/Users/Rebecca/Desktop/oda/Bar/counts",'a') as counts:
+files=listdir("C:/Users/Rebecca/Desktop/BI Class")
+with open("C:/Users/Rebecca/Desktop/Bar/counts",'a') as counts:
 counts.write("date \t Bar \t comment")
 for file in files:
 print(file)
@@ -16,7 +16,7 @@ date = "1/1/2011"
 marker=0
 for bline in bar: 
 if "datePublished" in bline:
-with open("C:/Users/Rebecca/Desktop/oda/Bar/counts",'a') as counts:
+with open("C:/Users/Rebecca/Desktop/Bar/counts",'a') as counts:
 counts.write("\n"+str(date.rstrip())+"\t "+str(file)+"\t "+str(marker))
 print("\n"+str(date.rstrip())+"\t "+str(file)+"\t "+str(marker))
 marker=0
