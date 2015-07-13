@@ -1,0 +1,43 @@
+def read_vsp():
+    import csv
+    import fileinput
+    import os
+    invoicefile = "C:/July.csv"
+    deductionsfile = "C:/15-6-30 vision.csv"
+
+    invoice = csv.reader(open(invoicefile))
+    deductions = csv.reader(open(deductionsfile))
+    for row in invoice:
+        found = 0
+        memberid = row[7]
+        if memberid == "Member ID":
+            continue
+        deductions = csv.reader(open(deductionsfile))
+        for drow in deductions:
+            name = drow[1]
+            try:
+                soc = drow[4]
+            except:
+                break
+            social = drow[4].split('-')
+            social = ''.join(social)
+            if memberid == social:
+                found = 1
+                enrollment = row[11]
+                if enrollment == "B":
+                    tenrollment = "Employee + 1"
+                elif enrollment == "C":
+                    tenrollment = "Employee"
+                elif enrollment == "A":
+                    tenrollment = "Employee + Family"
+                denrollment = drow[3].lstrip()
+                if tenrollment == denrollment:
+                    match = "OK"
+                else: match = "BAD"
+                print name+" enrolled in "+denrollment+"("+tenrollment+")- "+match
+                break
+        if found == 0:
+            print name + " not in invoice"
+
+
+read_vsp()
