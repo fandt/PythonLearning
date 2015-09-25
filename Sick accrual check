@@ -1,0 +1,70 @@
+def read_vacation():
+  from datetime import datetime
+  import csv
+  import fileinput
+  import os
+  import Tkinter, tkFileDialog
+  root = Tkinter.Tk()
+      #  WorkingDirectory = tkFileDialog.askdirectory(parent=root,initialdir="/",title='Please select a directory')
+        #*set directory
+  currentfile = tkFileDialog.askopenfilename(parent=root,initialdir="C:/Users/rmorganstern/Documents/reports/sick",title='Choose the CURRENT sick Accrual Report')
+  previousfile = tkFileDialog.askopenfilename(parent=root,initialdir="C:/Users/rmorganstern/Documents/reports/sick",title='Choose the PREVIOUS sick Accrual Report')
+
+  current=csv.reader(open(currentfile))
+  previous=csv.reader(open(previousfile))
+  marker=0
+  for row in current:
+    marker = marker +1
+    if marker > 1:
+      eename = row[0]
+      if  eename=="Total" or eename=="Grand Totals":
+        break
+      try:
+        #test for neg balance
+        bal = float(row[4])
+        taken = float(row[9])
+        etype = row[8]
+      except:
+        print eename + " Bal = negative"
+        continue
+      previous=csv.reader(open(previousfile))
+      for prow in previous:
+        pname = prow[0]
+        if eename == pname:
+          pbal = float(prow[4])
+          accrue = round(bal - pbal + taken,2)
+          if etype == "FTU" or etype =="FT":
+            if accrue != 3.34 and bal!=80:
+              print eename+" accrued "+str(accrue)+" (max 80) with bal= "+str(bal)
+          elif etype =="PT75":
+            if accrue!= 2.5 and bal!=60:
+              print eename+" accrued "+str(accrue)+" (60 max) with bal= "+str(bal)
+          elif etype =="PTR":
+            if accrue!= 1.67 and bal!=40:
+              print eename+" accrued "+str(accrue)+" (40 max) with bal= "+str(bal)
+          elif etype=="TEMP":
+            hours =float(row[7])
+            should =round(hours/30,0)
+            if accrue!=should:
+              print eename+" acrued "+str(accrue)+" TEMP with worked= "+str(hours)
+
+  current=csv.reader(open(currentfile))
+  previous=csv.reader(open(previousfile))
+  
+  for row in current:
+      leavemarker = 0
+      for prow in previous:
+          if prow[0] == row[0]:
+            leavemarker = 1
+            previous=csv.reader(open(previousfile))
+            break
+
+      if leavemarker == 0 and prow[0]== "Total":
+          #get seniority
+            print str(row[0]) + " wasn't on last invoice " 
+            previous=csv.reader(open(previousfile))
+          
+  raw_input("press enter to exit")
+
+
+read_vacation()
