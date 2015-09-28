@@ -9,9 +9,17 @@ def get_letters():
     win=Tk()
     inventorylist = "C:/Users/Rebecca/Desktop/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
+    alphab=["Menu"]
     for brand in brands:
-        newButtons=Tkinter.Button(win,text=brand[0])
+        alpha = brand[0][0]
+        if alpha not in alphab:
+            alphab.append(alpha)
+        print alphab
+    for letter in alphab:        
+        newButtons=Tkinter.Button(win,text=letter)
         newButtons.pack()
+        win.title("Overland Inventory")
+
     mainloop()
 
 get_letters()
