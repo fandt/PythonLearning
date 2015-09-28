@@ -1,0 +1,19 @@
+from Tkinter import *
+import tkMessageBox
+import Tkinter
+
+def get_letters:
+    import csv
+    import fileinput
+    import os
+    brands = "C:/.csv"
+
+alphab = ["A","B"]
+win=Tk()
+b1 = Button(win,text=alphab[0])
+b2 = Button(win,text=alphab[1])
+b1.pack()
+b2.pack()
+
+print("working")
+mainloop()
