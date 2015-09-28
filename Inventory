@@ -2,18 +2,16 @@ from Tkinter import *
 import tkMessageBox
 import Tkinter
 
-def get_letters:
+def get_letters():
     import csv
     import fileinput
     import os
-    brands = "C:/.csv"
+    win=Tk()
+    inventorylist = "C:/Users/Rebecca/Desktop/Overland/Ordering Guide.csv"
+    brands = csv.reader(open(inventorylist))
+    for brand in brands:
+        newButtons=Tkinter.Button(win,text=brand[0])
+        newButtons.pack()
+    mainloop()
 
-alphab = ["A","B"]
-win=Tk()
-b1 = Button(win,text=alphab[0])
-b2 = Button(win,text=alphab[1])
-b1.pack()
-b2.pack()
-
-print("working")
-mainloop()
+get_letters()
