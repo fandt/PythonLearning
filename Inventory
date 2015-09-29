@@ -37,8 +37,8 @@ def get_letters():
     inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
     cdate = datetime.today()
-    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+str(format(cdate,"%Y-%m-%d"))
-    print file
+    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+str(format(cdate,"%Y-%m-%d"))+".csv"
+    balrep = open(file,"w+")
     alphab=["X"]
     for brand in brands:
         alpha = brand[0][0]
@@ -58,7 +58,8 @@ def get_letters():
             bottles.append(brand)
     for number, letter in enumerate(bottles,0):
         print'{}{}'.format(number, letter)
-    bottle = input ('Enter bottle number: ')
+    bottleindex = input ('Enter bottle number: ')
+    bottle = bottles[bottleindex]
 
 
     with open(file, 'a') as balrep:
