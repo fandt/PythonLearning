@@ -27,12 +27,18 @@ get_letters()
 
 #more simple for now
 
+import csv
+import fileinput
+import os
+from datetime import datetime
+#import xlwt
+    
 def get_letters():
-    import csv
-    import fileinput
-    import os
-    inventorylist = "C:/Users/rmorganstern/Desktop/PY/Ordering Guide.csv"
+    inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
+    cdate = datetime.today()
+    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+str(format(cdate,"%Y-%m-%d"))
+    print file
     alphab=["X"]
     for brand in brands:
         alpha = brand[0][0]
@@ -53,7 +59,11 @@ def get_letters():
     for number, letter in enumerate(bottles,0):
         print'{}{}'.format(number, letter)
     bottle = input ('Enter bottle number: ')
-        
+
+
+    with open(file, 'a') as balrep:
+       balrep.write(str(bottle)+"\t"+"\n")
+
 
 
 get_letters()
