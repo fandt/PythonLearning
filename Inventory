@@ -23,3 +23,37 @@ def get_letters():
     mainloop()
 
 get_letters()
+
+
+#more simple for now
+
+def get_letters():
+    import csv
+    import fileinput
+    import os
+    inventorylist = "C:/Users/rmorganstern/Desktop/PY/Ordering Guide.csv"
+    brands = csv.reader(open(inventorylist))
+    alphab=["X"]
+    for brand in brands:
+        alpha = brand[0][0]
+        if alpha not in alphab:
+            alphab.append(alpha)
+    alphab.sort()
+    print alphab
+    letter = raw_input('Enter your brand letter: ')
+    l=str(letter).upper()
+    if l=="X" or l=="x":
+        quit
+    bottles=["X"]
+    brands = csv.reader(open(inventorylist))
+    for brand in brands:
+        alpha = brand[0][0]
+        if alpha == l or alpha == l.lower():
+            bottles.append(brand)
+    for number, letter in enumerate(bottles,0):
+        print'{}{}'.format(number, letter)
+    bottle = input ('Enter bottle number: ')
+        
+
+
+get_letters()
