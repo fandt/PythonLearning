@@ -36,9 +36,6 @@ from datetime import datetime
 def get_letters():
     inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
-    cdate = datetime.today()
-    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+str(format(cdate,"%Y-%m-%d"))+".csv"
-    balrep = open(file,"w+")
     alphab=["X"]
     for brand in brands:
         alpha = brand[0][0]
@@ -50,20 +47,33 @@ def get_letters():
     l=str(letter).upper()
     if l=="X" or l=="x":
         quit
+    else:
+        get_bottles(l)
+        
+
+def get_bottles(l):
     bottles=["X"]
+    inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
+    cdate = datetime.today()
+    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+str(format(cdate,"%Y-%m-%d"))+".csv"
+    balrep = open(file,"w+")
     for brand in brands:
         alpha = brand[0][0]
         if alpha == l or alpha == l.lower():
             bottles.append(brand)
     for number, letter in enumerate(bottles,0):
         print'{}{}'.format(number, letter)
-    bottleindex = input ('Enter bottle number: ')
-    bottle = bottles[bottleindex]
-
-
+    bottleindex = raw_input ('Enter bottle number: ')
+    if bottleindex=="0" or bottleindex=="X" or bottleindex=="x":
+        get_letters()
+        exit
+    bottle = bottles[int(bottleindex)]
+    weightval = raw_input('Enter bottle weight: ')
     with open(file, 'a') as balrep:
-       balrep.write(str(bottle)+"\t"+"\n")
+       balrep.write("\n"+str(bottle)+"\t,"+weightval)
+       balrep.close()
+    
 
 
 
