@@ -55,9 +55,9 @@ def get_bottles(l):
     bottles=["X"]
     inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
-    cdate = datetime.today()
-    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+str(format(cdate,"%Y-%m-%d"))+".csv"
-    balrep = open(file,"w+")
+    cdate = str(format(datetime.today(),"%Y-%m-%d"))
+    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
+
     for brand in brands:
         alpha = brand[0][0]
         if alpha == l or alpha == l.lower():
@@ -67,13 +67,18 @@ def get_bottles(l):
     bottleindex = raw_input ('Enter bottle number: ')
     if bottleindex=="0" or bottleindex=="X" or bottleindex=="x":
         get_letters()
+        #error catch here please
         exit
+        quit
     bottle = bottles[int(bottleindex)]
     weightval = raw_input('Enter bottle weight: ')
-    with open(file, 'a') as balrep:
-       balrep.write("\n"+str(bottle)+"\t,"+weightval)
-       balrep.close()
-    
+    try:
+        with open(file,'a') as balrep:
+            balrep.write("\n"+cdate+"\t,"+str(bottle)+"\t,"+weightval)
+            balrep.close()
+    except:
+        balrep = open(file,"w+")
+    get_letters()
 
 
 
