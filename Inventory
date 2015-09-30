@@ -36,17 +36,32 @@ from datetime import datetime
 def get_letters():
     inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
-    alphab=["X"]
+    cdate = str(format(datetime.today(),"%Y-%m-%d"))
+    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
+    alphab=["X", "DONE"]
     for brand in brands:
         alpha = brand[0][0]
         if alpha not in alphab:
             alphab.append(alpha)
-    alphab.sort()
+    alphab[2:].sort()
     print alphab
     letter = raw_input('Enter your brand letter: ')
     l=str(letter).upper()
     if l=="X" or l=="x":
+        exit
         quit
+    elif l=="DONE":
+        try:
+            with open(file,'a') as balrep:
+                balrep.write("\n\n*********\n\n")
+                balrep.close()
+
+            print "OK, Thanks!"
+        except:
+            print "Nothing Recorded"
+            exit
+            quit
+        get_sums()
     else:
         get_bottles(l)
         
@@ -81,5 +96,18 @@ def get_bottles(l):
     get_letters()
 
 
+def get_sums():
+    bal_rep = open(file,'r')
+    for row in bal_rep:
+        bline = bal_rep.readline()
+        if bline == "********":
+            with open(file,'a') as balrep:
+                balrep.write(totals)
+                balrep.close()
+        else:
+            current=bline[2]
+            print current
 
+
+        
 get_letters()
