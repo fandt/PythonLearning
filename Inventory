@@ -97,16 +97,21 @@ def get_bottles(l):
 
 
 def get_sums():
-    bal_rep = open(file,'r')
-    for row in bal_rep:
-        bline = bal_rep.readline()
-        if bline == "********":
-            with open(file,'a') as balrep:
-                balrep.write(totals)
-                balrep.close()
-        else:
-            current=bline[2]
-            print current
+    cdate = str(format(datetime.today(),"%Y-%m-%d"))
+    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
+    with open(file,'r') as bal_rep:
+        for bline in bal_rep:
+            totals=["Totals"]
+            if bline == "********":
+                with open(file,'a') as balrep:
+                    balrep.write(totals)
+                    balrep.close()
+                    print "printed"
+            else:
+                try:
+                    curbot=bline[2]
+                except:
+                    print bline
 
 
         
