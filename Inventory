@@ -99,20 +99,30 @@ def get_bottles(l):
 def get_sums():
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
     file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
-    with open(file,'r') as bal_rep:
-        for bline in bal_rep:
-            totals=["Totals"]
-            if bline == "********":
-                with open(file,'a') as balrep:
-                    balrep.write(totals)
-                    balrep.close()
-                    print "printed"
-            else:
-                try:
-                    curbot=bline[2]
-                except:
-                    print bline
-
+    #with open(file,'r') as bal_rep:
+    balancereport = open(file,'r')
+    while True:
+        bline=balancereport.readline()
+        if not bline: break
+        totals=["Bottle","weight"]
+        if "*" in bline :
+            sumfile = "C:/Users/rmorganstern/Desktop/PY/Overland/Summary/"+cdate+".csv"
+            try:
+                with open(sumfile,'a') as summary:
+                    summary.write(cdate+"\t,"+str(bottle)+"\t,"+weightval+"\n")
+                    summary.close()
+            except:
+                summary = open(file,"w+")
+                print "printed"
+        else:
+            try:
+                curbot=bline.split(',')[1]
+                print curbot
+                totals[0]=curbot
+                #totals[1]=bline.split(',')[2]
+                print "tried "+curbot
+            except:
+                print bline.split(',')[0] +" error"
 
         
 get_letters()
