@@ -38,7 +38,7 @@ def get_letters():
     brands = csv.reader(open(inventorylist))
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
     file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
-    alphab=["*X", "*DONE"]
+    alphab=["*X*", "*DONE*"]
     for brand in brands:
         alpha = brand[0][0]
         if alpha not in alphab:
@@ -54,7 +54,6 @@ def get_letters():
         try:
             with open(file,'a') as balrep:
                 balrep.close()
-
             print "OK, Thanks!"
         except:
             print "Nothing Recorded"
@@ -63,6 +62,7 @@ def get_letters():
         get_sums()
     else:
         get_bottles(l)
+#need a 'start over or resume'
         
 
 def get_bottles(l):
@@ -88,7 +88,7 @@ def get_bottles(l):
     weightval = raw_input('Enter bottle weight: ')
     try:
         with open(file,'a') as balrep:
-            balrep.write("\n"+cdate+"\t,"+str(bottle)+"\t,"+weightval)
+            balrep.write(cdate+"\t,"+str(bottle)+"\t,"+weightval+"\n")
             balrep.close()
     except:
         balrep = open(file,"w+")
@@ -100,28 +100,39 @@ def get_sums():
     file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
     #with open(file,'r') as bal_rep:
     balancereport = open(file,'r')
+    totals=["Bottle","weight1"]
     while True:
         bline=balancereport.readline()
         if not bline: break
-        totals=["Bottle","weight"]
-        if "*" in bline :
-            sumfile = "C:/Users/rmorganstern/Desktop/PY/Overland/Summary/"+cdate+".csv"
-            try:
-                with open(sumfile,'a') as summary:
-                    summary.write(cdate+"\t,"+str(bottle)+"\t,"+weightval+"\n")
-                    summary.close()
-            except:
-                summary = open(file,"w+")
-                print "printed"
-        else:
-            try:
-                curbot=bline.split(',')[1]
-                print curbot
-                totals[0]=curbot
-                #totals[1]=bline.split(',')[2]
-                print "tried "+curbot
-            except:
-                print bline.split(',')[0] +" error"
+        sumfile = "C:/Users/rmorganstern/Desktop/PY/Overland/Summary/"+cdate+".csv"
+        try:
+            curbot=bline.split(',')[1]
+            curweight=(bline.split(',')[2])
+            if curbot in totals:
+                mi= totals.index(curbot)
+                prevweight = int(totals[mi+1])
+                curweight = int(curweight)
+                totals[mi+1]= prevweight+curweight
+                print "additional bottle of "+curbot+" added"
+            else:
+                totals.append(curbot)
+                totals.append(curweight)
+        except:
+            print str(bline.split(',')) +" error"
+    try:
+        with open(sumfile,'a') as summary:
+            ti=0
+            while ti < len(totals):
+                bottle=totals[ti]
+                weight=totals[ti+1]
+                print weight
+                ti=ti+2
+                summary.write(bottle)
+                summary.close()
+            print "opened"
+    except:
+        summary = open(sumfile,"w+")
+        print "printed"   
 
         
 get_letters()
