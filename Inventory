@@ -87,16 +87,17 @@ def get_bottles(l):
     while True:
         bottleindex = raw_input ('Enter bottle number: ')
         print len(bottles)
+        if bottleindex=="0" or bottleindex=="X" or bottleindex=="x":
+            get_letters()
+        #error catch here please
+            exit
+            quit
         if int(bottleindex) > len(bottles)-1:
             print "                           >>> oops. pick again <<<"
             continue
         else:
             break
-    if bottleindex=="0" or bottleindex=="X" or bottleindex=="x":
-        get_letters()
-        #error catch here please
-        exit
-        quit
+
     bottle = bottles[int(bottleindex)]
     weightval = raw_input('Enter bottle weight: ')
     try:
@@ -149,5 +150,6 @@ def get_sums():
 
         
 get_letters()
+
 
 
