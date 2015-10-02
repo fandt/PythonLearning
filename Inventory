@@ -38,12 +38,12 @@ def get_letters():
     brands = csv.reader(open(inventorylist))
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
     file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
-    alphab=["X", "DONE"]
+    alphab=["*X", "*DONE"]
     for brand in brands:
         alpha = brand[0][0]
         if alpha not in alphab:
             alphab.append(alpha)
-    alphab[2:].sort()
+    alphab.sort()
     print alphab
     letter = raw_input('Enter your brand letter: ')
     l=str(letter).upper()
@@ -53,7 +53,6 @@ def get_letters():
     elif l=="DONE":
         try:
             with open(file,'a') as balrep:
-                balrep.write("\n\n*********\n\n")
                 balrep.close()
 
             print "OK, Thanks!"
