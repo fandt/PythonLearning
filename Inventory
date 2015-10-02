@@ -38,15 +38,21 @@ def get_letters():
     brands = csv.reader(open(inventorylist))
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
     file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
-    alphab=["*X*", "*DONE*"]
+    alphab=["X", "DONE"]
     for brand in brands:
         alpha = brand[0][0]
         if alpha not in alphab:
             alphab.append(alpha)
-    alphab.sort()
+    alphab=alphab[0:2]+sorted(alphab[2:])
     print alphab
-    letter = raw_input('Enter your brand letter: ')
-    l=str(letter).upper()
+    while True:
+        letter = raw_input('Enter your brand letter: ')
+        l=str(letter).upper()
+        if l not in alphab:
+            print "                           >>> oops. pick again <<<"
+            continue
+        else:
+            break
     if l=="X" or l=="x":
         exit
         quit
@@ -78,7 +84,14 @@ def get_bottles(l):
             bottles.append(brand)
     for number, letter in enumerate(bottles,0):
         print'{}{}'.format(number, letter)
-    bottleindex = raw_input ('Enter bottle number: ')
+    while True:
+        bottleindex = raw_input ('Enter bottle number: ')
+        print len(bottles)
+        if int(bottleindex) > len(bottles)-1:
+            print "                           >>> oops. pick again <<<"
+            continue
+        else:
+            break
     if bottleindex=="0" or bottleindex=="X" or bottleindex=="x":
         get_letters()
         #error catch here please
@@ -131,7 +144,10 @@ def get_sums():
             print "opened"
     except:
         summary = open(sumfile,"w+")
-        print "printed"   
+        print "printed"
+
 
         
 get_letters()
+
+
