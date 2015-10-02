@@ -115,8 +115,8 @@ def get_sums():
                 totals[mi+1]= prevweight+curweight
                 print "additional bottle of "+curbot+" added"
             else:
-                totals.append(curbot)
-                totals.append(curweight)
+                totals.append(str(curbot))
+                totals.append(int(curweight))
         except:
             print str(bline.split(',')) +" error"
     try:
@@ -124,11 +124,10 @@ def get_sums():
             ti=0
             while ti < len(totals):
                 bottle=totals[ti]
-                weight=totals[ti+1]
-                print weight
+                weight=str(totals[ti+1])
                 ti=ti+2
-                summary.write(bottle)
-                summary.close()
+                summary.write(bottle+"\t,"+weight+"\n")
+            summary.close()
             print "opened"
     except:
         summary = open(sumfile,"w+")
