@@ -31,13 +31,15 @@ import csv
 import fileinput
 import os
 from datetime import datetime
+#import numpy as np
+#import matplotlib.pyplot as plt
 #import xlwt
     
 def get_letters():
-    inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
+    inventorylist = "C:/Users/Rebecca/Desktop/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
-    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
+    file = "C:/Users/Rebecca/Desktop/Overland/Balance_Report/"+cdate+".csv"
     alphab=["X", "DONE"]
     for brand in brands:
         alpha = brand[0][0]
@@ -73,10 +75,10 @@ def get_letters():
 
 def get_bottles(l):
     bottles=["X"]
-    inventorylist = "C:/Users/rmorganstern/Desktop/PY/Overland/Ordering Guide.csv"
+    inventorylist = "C:/Users/Rebecca/Desktop/Overland/Ordering Guide.csv"
     brands = csv.reader(open(inventorylist))
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
-    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
+    file = "C:/Users/Rebecca/Desktop/Overland/Balance_Report/"+cdate+".csv"
 
     for brand in brands:
         alpha = brand[0][0]
@@ -111,14 +113,14 @@ def get_bottles(l):
 
 def get_sums():
     cdate = str(format(datetime.today(),"%Y-%m-%d"))
-    file = "C:/Users/rmorganstern/Desktop/PY/Overland/Balance_Report/"+cdate+".csv"
+    file = "C:/Users/Rebecca/Desktop/Overland/Balance_Report/"+cdate+".csv"
     #with open(file,'r') as bal_rep:
     balancereport = open(file,'r')
     totals=["Bottle","weight1"]
     while True:
         bline=balancereport.readline()
         if not bline: break
-        sumfile = "C:/Users/rmorganstern/Desktop/PY/Overland/Summary/"+cdate+".csv"
+        sumfile = "C:/Users/Rebecca/Desktop/Overland/Summary/"+cdate+".csv"
         try:
             curbot=bline.split(',')[1]
             curweight=(bline.split(',')[2])
@@ -150,6 +152,3 @@ def get_sums():
 
         
 get_letters()
-
-
-
