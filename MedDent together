@@ -1,0 +1,180 @@
+def check_benes():
+  from datetime import datetime
+  import csv
+  import fileinput
+  import os
+  import Tkinter, tkFileDialog
+  root = Tkinter.Tk()
+        #  WorkingDirectory = tkFileDialog.askdirectory(parent=root,initialdir="/",title='Please select a directory')
+          #*set directory
+        #abspath = os.path.abspath(__file__)
+        #dname = os.path.dirname(abspath)
+        #os.chdir(dname)
+        #*supposedly this names your directory from the path of the running file http://stackoverflow.com/questions/1432924/python-change-the-scripts-working-directory-to-the-scripts-own-directory
+  Medreport = tkFileDialog.askopenfilename(parent=root,initialdir="C:/Users/rmorganstern/Documents/Benefits Reconcile/Kaiser",title='Medical report')
+  Dentreport = tkFileDialog.askopenfilename(parent=root,initialdir="C:/Users/rmorganstern/Documents/Benefits Reconcile/Cigna",title='Dental report')
+  HRBreport = tkFileDialog.askopenfilename(parent=root,initialdir="C:/Users/rmorganstern/Documents/Benefits Reconcile",title='HRB report')
+
+#  Medreport="C:/Users/rmorganstern/Documents/Benefits Reconcile/Kaiser/Kaiser Medical Deductions Report 7-15-16.csv"
+#  Dentreport="C:/Users/rmorganstern/Documents/Benefits Reconcile/Cigna/Dental Deductions Report 7-15-2016.csv"
+#  HRBreport="C:/Users/rmorganstern/Documents/Benefits Reconcile/HRB mdl 7.15.16.csv"
+
+  dent=csv.reader(open(Dentreport))
+  HRB=csv.reader(open(HRBreport))
+  marker=0
+  print " "
+  print "DENTAL"
+  print " "
+  for drow in dent:
+      try:
+        dfilenumber = int(drow[1])
+        eename = drow[2]
+      except:
+        continue
+      try:
+        #test dental
+        ee = float(drow[3].replace(',',''))
+        er = float(drow[4].replace(',',''))
+        dval = round(ee+er,2)
+      except:
+        print str(eename) + " is messed up"
+        continue
+      HRB=csv.reader(open(HRBreport))
+      for hrbrow in HRB:
+        try:
+          hrbfilenumber = int(hrbrow[7])
+        except:
+          continue
+        if dfilenumber == hrbfilenumber:
+          hrbdval = hrbrow[13]
+          hrbdcov = hrbrow[14]
+          if hrbdval == "DENTAL CIGNA- HMO" or hrbdval == "DENTAL UNION CIGNA-HMO" or hrbdval=="DENTAL UNION CIGNA- HMO - 30-39 Hours":
+            if hrbdcov == "Employee":
+              if dval != 6.75 and dval!=6.74:
+                print eename+" paid "+str(ee)+" with "+str(hrbdval)+" & " +str(hrbdcov)+"( should be $.63)"
+            if hrbdcov =="Employee + 1":
+              if dval != 11.89:
+                print eename+" paid "+str(dval)+" with "+str(hrbdval)+" & " +str(hrbdcov)+" (should be $5.46)"
+            if hrbdcov=="Employee + Family":
+              if dval!=21.42:
+                print eename+" paid "+str(ee)+" with "+str(hrbdval)+" & " +str(hrbdcov)+" (should be $14.41)"
+          elif hrbdval =="DENTAL UNION CIGNA- PPO" or hrbdval =="DENTAL CIGNA- PPO" or hrbdval=="DENTAL CIGNA- PPO - 30-39 Hours" or hrbdval=="DENTAL CIGNA- PPO - 20-29 Hours" :
+            if hrbdcov == "Employee":
+              if dval != 21.23:
+                print eename+" paid "+str(ee)+" with "+str(hrbdval)+" & " +str(hrbdcov)+" (should be $2.03)"
+            if hrbdcov =="Employee + 1":
+              if dval != 40.76 and dval!=40.75:
+                print eename+" paid "+str(ee)+" with "+str(hrbdval)+" & " +str(hrbdcov)+" (should be $20.71)"
+            if hrbdcov=="Employee + Family":
+              if dval!=68.8 and dval!=68.79:
+                print eename+" paid "+str(ee)+" with "+str(hrbdval)+" & " +str(hrbdcov)+" (should be $47.51)"
+
+          else: #This is the catch for everyone else
+              print eename+" paid "+str(ee)+" with "+str(hrbdval)  +" & " +str(hrbdcov)   
+          break;
+        
+#read back from HRB to deduction
+  HRB=csv.reader(open(HRBreport))
+  
+  for hrbrow in HRB:
+      match = 0
+      try:
+        hrbfilenumber = int(hrbrow[7])
+      except:
+        continue
+   #   print hrbfilenumber
+      leavemarker = 0
+      dent=csv.reader(open(Dentreport))
+      for drow in dent:
+          try:
+              dfilenumber= int(drow[1])
+          except:
+              continue
+          if hrbfilenumber == dfilenumber:
+              match = 1
+              dent=csv.reader(open(Dentreport))
+              
+      if match == 0 and hrbrow[13] and hrbrow[13]!="Waived":
+          print str(hrbfilenumber)+" " +str(hrbrow[0])+" "+str(hrbrow[1])+" Not Found in deductions"
+          dent=csv.reader(open(Dentreport))
+
+
+
+
+
+  med=csv.reader(open(Medreport))
+  HRB=csv.reader(open(HRBreport))
+  marker=0
+  print " "
+  print "MEDICAL"
+  print " "
+  for mrow in med:
+    marker = marker +1
+    if marker > 1:
+      if mrow[0]=="Grand Totals":
+        break
+      mfilenumber = int(mrow[1])
+      try:
+        #test medical
+        ee = float(mrow[3])
+        er = float(mrow[4])
+        mval = round(ee+er,2)
+        eename = mrow[2]
+      except:
+        print str(eename) + " is messed up"
+        continue
+      HRB=csv.reader(open(HRBreport))
+      for hrbrow in HRB:
+        try:
+          hrbfilenumber = int(hrbrow[7])
+        except:
+          continue
+        if mfilenumber == hrbfilenumber:
+          hrbmval = hrbrow[11]
+          mcoverage = hrbrow[12]
+          if hrbmval == "KAISER OPT 2" or hrbmval == "KAISER UNION OPT 2" or hrbmval == "KAISER UNION OPT 2 - 30-39 Hours":
+            if mval != 327.12 and mval!=327.11:
+              print eename+" paid "+str(ee)+" with "+str(hrbmval)+" (should be $32.09)"
+          elif hrbmval =="KAISER HMO" or hrbmval =="KAISER HMO - 30-39 Hours" or hrbmval =="KAISER UNION HMO":
+            if mcoverage == "Employee":
+              if mval != 337.65:
+                print eename+" paid "+str(ee)+" with "+str(hrbmval)+" (should be $41.5)"
+            elif mcoverage =="Employee + Family":
+              if mval != 996.06:
+                print eename+" paid "+str(mval)+" with "+str(hrbmval)+" (should be $632.16)"
+          elif hrbmval =="KAISER DHMO - 30-39 Hours" or hrbmval=="KAISER UNION DHMO" or hrbmval =="KAISER DHMO":
+            if mval != 309.20 and mval!=309.21:
+              print eename+" paid "+str(ee)+" with "+str(hrbmval)+" (should be $22.13)"
+          elif hrbmval =="KAISER HMO UNION 30-39 Hours":
+            if mval != 337.66:
+              print eename+" paid "+str(ee)+" with "+str(hrbmval)+" (should be $72.39)"
+          else: #This is the catch for everyone else
+              print eename+" paid "+str(ee)+" with "+str(hrbmval)
+
+  HRB=csv.reader(open(HRBreport))
+  
+  for hrbrow in HRB:
+      match = 0
+      try:
+        hrbfilenumber = int(hrbrow[7])
+      except:
+        continue
+      leavemarker = 0
+      med=csv.reader(open(Medreport))
+      for mrow in med:
+          try:
+              mfilenumber= int(mrow[1])
+          except:
+              continue
+          if hrbfilenumber == mfilenumber:
+              match = 1
+              med=csv.reader(open(Medreport))
+              
+      if match == 0 and hrbrow[11] and hrbrow[11]!="Waived":
+          print str(hrbfilenumber)+" " +str(hrbrow[0])+" "+str(hrbrow[1])+" Not Found in deductions " + hrbrow[14]
+          med=csv.reader(open(Medreport))
+  raw_input("press enter to exit")
+
+
+check_benes()
+
