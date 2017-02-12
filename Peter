@@ -1,0 +1,26 @@
+x = {}
+x['peter'] = [6.3,4.5]
+x['bug'] = 5.4
+x['coffee'] = "haha"
+
+class Bug():
+    def __init__(self, height):
+        self.height = height
+        self.sexiness = 10
+    
+    def print_height(self):
+        print(self.height, self.sexiness)
+        
+    def add_to_height(self, amount_to_add):
+        self.height += amount_to_add
+
+x = Bug(5.4)
+y = Bug(6.0)
+z = Bug(2.3)
+
+x.print_height()
+x.add_to_height(10)
+x.print_height()
+
+y.add_to_height(5)
+y.print_height()
