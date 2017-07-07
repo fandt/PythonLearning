@@ -1,0 +1,42 @@
+import os
+import sqlite3
+import MySQLdb
+from MySQLdb.constants import FIELD_TYPE
+import csv
+import fileinput
+import os
+from datetime import datetime
+
+conn = MySQLdb.connect(user = 'root',host="127.0.0.1",db = 'bottlesareus',port = 3306)
+c = conn.cursor()
+test=c.execute("select * from brands")
+test =0
+itemsales = "C:/Users/Rebecca/Desktop/Overland/Item Sales Alphabetical ytd 7.10.16.csv"
+sales = csv.reader(open(itemsales))
+for sale in sales:
+    try:
+        s_items = sale[0]
+        c_ticketitem_net_prices=sale[2]
+        f_ticketitem_real_qtys=sale[9]
+        s_revenue_classs=sale[10]
+        s_item_groups=sale[11]
+        s_name=sale[14]
+        dt = datetime.strptime(sale[12],"%m/%d/%y %H:%M %p")
+        dt_whens = str(format(dt,"%Y-%m-%d %H:%M"))
+        i_ticket_item_id = sale[18]
+        c.execute("insert into ItemSales (s_item,c_ticketitem_net_price,f_ticketitem_real_qty,s_revenue_class,s_item_group,dt_when,i_ticket_item_id,s_name)values (%s,%s,%s,%s,%s,%s,%s,%s)",(s_items,c_ticketitem_net_prices,f_ticketitem_real_qtys,s_revenue_classs,s_item_groups,dt_whens,i_ticket_item_id,s_name))
+        conn.commit()
+    except:
+        print 'error'+str(sale[12])
+        test=test+1
+        print test
+        continue
+
+  #  whatsadded.append((str(brand).replace("[",'')))
+#    c.execute("insert into ItemSales (s_item,c_ticketitem_net_price,f_ticketitem_real_qty,s_revenue_class,s_item_group,dt_when)values (%s,%s,%s,%s,%s,%s)",(s_items,c_ticketitem_net_prices,f_ticketitem_real_qtys,s_revenue_classs,s_item_groups,dt_whens))
+#    conn.commit()
+#print dt
+#print dt_whens
+#print s_items+"_"+c_ticketitem_net_prices+","+f_ticketitem_real_qtys+","+s_revenue_classs+","+s_item_groups+","+dt_whens
+conn.close()
+
