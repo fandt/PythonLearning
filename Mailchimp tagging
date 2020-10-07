@@ -1,0 +1,155 @@
+
+import requests
+import json
+import csv
+from csv import reader
+import time
+import hashlib
+
+startDate = endDate = '2020-10-01'  # UPDATE THIS DATE to run day
+endDateTime=endDate+"T23:59:59"
+startDateTime=startDate+"T00:00:00"
+
+############### Start RUN REPORT from ACME
+############### Start RUN REPORT from ACME
+
+members_url = 'https://api.acmeticketing.com/v2/b2b/async/report'
+headers = {'x-acme-user_name':'{user name}', 'x-acme-password':'{pw}','x-acme-tenantId':'{tenentid}',
+           'x-acme-api-key':'{api key}'}
+
+
+queryExpression = {
+    "reportUuid":"{reportid}",# This points to the specific report, change for prod
+    "endDate": endDate,
+    "startDate": startDate,
+    "endDateTime": endDateTime,
+    "startDateTime": startDateTime,
+    "dateRangeField":"EventStartTime",
+    "queryExpression":{
+         "collectionName":"Sale",
+         "limit":0,
+         "findFields":[{
+             "fieldName":"Email",
+             "include":True
+          },{
+             "fieldName":"CheckInStatus",
+             "include":True
+          },{
+             "fieldName":"ContactLastName",
+             "include":True
+              },{
+             "fieldName":"EventName",
+             "include":True
+              }],
+        "findQueries": [{
+            "fieldName": "Email",
+            "operator": "exists"
+        },{
+            "fieldName":"EventName",
+            "operator":"equals",
+            "fieldValue":"Member Preview Days"}]
+ }
+}
+
+response = requests.post(members_url, headers=headers, json=queryExpression)
+#execute report and save as 'response'
+responseJson = response.json()
+reportId = responseJson['id']
+#get id of report that was just execute and pass to next query to retrieve results
+
+time.sleep(4) #give report a second to run
+
+
+results_url = 'https://api.acmeticketing.com/v2/b2b/async/report/csv/'+str(reportId)
+print(results_url)
+
+results = requests.get(results_url, headers=headers)
+results.encoding='utf-8'
+#save get of reportId (above executed report) into results
+
+########################## END RUN ACME REPORT
+##########################
+########################## END RUN ACME REPORT
+##########################
+
+timestr = time.strftime("%Y%m%d-%H%M%S")
+write_filename = r'E:\ACME-MC\background files\AcmeSurvey-tag'+startDate+'.csv'
+
+results_file = open(write_filename,'w', encoding='utf-8')
+results_file.write(results.text)
+results_file.close()
+
+#write out file and then read in, for no real good reason
+error_file = r'E:\ACME-MC\background files\AcmeTag-errors_'+startDate+'.csv'
+error_list=[]
+
+with open (write_filename) as records:
+    r = reader(records)
+    headers= next(r,None)
+    csv_reader_records = list(r)
+
+csv_reader_records.sort()
+    
+for att in csv_reader_records:
+    email=att[0]
+    attend=att[1]
+    lname =att[2]
+    if (attend == 'CheckedIn' or attend == 'PartiallyCheckedIn'):
+        tagNm = 'Post Visit Automation'
+    elif (attend == '' or attend== None or attend == 'NotCheckedIn'):
+        tagNm = 'No Shows Post Visit Automation'
+    else :
+        continue
+        
+    em = hashlib.md5(email.lower().encode())
+    subscriber_hash=(em.hexdigest())
+
+    group_url = 'https://usxx.api.mailchimp.com/x.0/lists/{listid}/members/'+subscriber_hash+'/tags'
+    auth = ('my_username', '{key}')
+    headers = {'Content-Type': 'application/json'}
+    payload = {'tags':[{
+        'name':tagNm,
+        'status':'active'
+        }]}
+    params = {'count':25}
+    
+    getresponse = requests.get(group_url, auth=auth, headers=headers, params=params)
+    gresponsetext = getresponse.text
+    gresponsej = getresponse.json()
+    
+    if 'No shows Post Visit Automation' in gresponsetext:
+        error_particulars=(email,' , multiple visits, already - No shows Post Visit Automation, now - ',tagNm,' \n')
+        error_list.extend(error_particulars)
+        continue
+    elif 'Post Visit Automation' in gresponsetext:
+        error_particulars=(email,' , multiple visits, already - Post Visit Automation, now - ',tagNm,' \n')
+        error_list.extend(error_particulars)
+        continue
+    elif gresponsej['total_items']>25: #this person has more tags than we're downloading so toss them to error file
+        error_particulars=(email,' , more than 25 tags, now - ',tagNm,' \n')
+        error_list.extend(error_particulars)
+        continue
+    else:
+        try:
+            response = requests.post(group_url, auth=auth, headers=headers, json=payload)
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+            print(e)
+            error_list.extend(e)
+
+
+with open(error_file, 'w', encoding='utf-8') as error_file_write :
+    for error in error_list:
+        error_file_write.write(error)
+
+
+
+
+
+
+
+
+
+
+
+
