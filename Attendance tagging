@@ -10,10 +10,10 @@ startDate = endDate = '2020-10-01'
 endDateTime=endDate+"T23:59:59"
 startDateTime=startDate+"T00:00:00"
 
-############### Start RUN REPORT from ACME
-############### Start RUN REPORT from ACME
+############### Start RUN REPORT 
+############### Start RUN REPORT 
 
-members_url = 'https://t'
+members_url = 'https://'
 headers = {apistuff}
 
 
@@ -66,9 +66,9 @@ results = requests.get(results_url, headers=headers)
 results.encoding='utf-8'
 #save get of reportId (above executed report) into results
 
-########################## END RUN ACME REPORT
+########################## END RUN  REPORT
 ##########################
-########################## END RUN ACME REPORT
+########################## END RUN REPORT
 ##########################
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
