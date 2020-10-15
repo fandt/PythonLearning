@@ -6,14 +6,14 @@ from csv import reader
 import time
 import hashlib
 
-startDate = endDate = '2020-10-01'  # UPDATE THIS DATE to run day
+startDate = endDate = '2020-10-01'  
 endDateTime=endDate+"T23:59:59"
 startDateTime=startDate+"T00:00:00"
 
 ############### Start RUN REPORT from ACME
 ############### Start RUN REPORT from ACME
 
-members_url = 'https://api.acmeticketing.com/v2/b2b/async/report'
+members_url = 'https://t'
 headers = {apistuff}
 
 
@@ -59,7 +59,7 @@ reportId = responseJson['id']
 time.sleep(4) #give report a second to run
 
 
-results_url = 'https://api.acmeticketing.com/v2/b2b/async/report/csv/'+str(reportId)
+results_url = 'https://'+str(reportId)
 print(results_url)
 
 results = requests.get(results_url, headers=headers)
@@ -72,14 +72,14 @@ results.encoding='utf-8'
 ##########################
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
-write_filename = r'E:\ACME-MC\background files\AcmeSurvey-tag'+startDate+'.csv'
+write_filename = r'E:\\Survey-tag'+startDate+'.csv'
 
 results_file = open(write_filename,'w', encoding='utf-8')
 results_file.write(results.text)
 results_file.close()
 
 #write out file and then read in, for no real good reason
-error_file = r'E:\ACME-MC\background files\AcmeTag-errors_'+startDate+'.csv'
+error_file = r'E:\\Tag-errors_'+startDate+'.csv'
 error_list=[]
 
 with open (write_filename) as records:
@@ -103,7 +103,7 @@ for att in csv_reader_records:
     em = hashlib.md5(email.lower().encode())
     subscriber_hash=(em.hexdigest())
 
-    group_url = 'https://usxx.api.mailchimp.com/x.0/lists/{listid}/members/'+subscriber_hash+'/tags'
+    group_url = 'https://lists/{listid}/members/'+subscriber_hash+'/tags'
     auth = ('{apistuff}')
     headers = {'Content-Type': 'application/json'}
     payload = {'tags':[{
